@@ -46,6 +46,23 @@ lab.experiment('With right settings', () => {
         });
     });
 
+    it('Adds all the routes in the globbed routes folder to the server (options: glob)', (done) => {
+
+        const server = new Hapi.Server();
+        server.connection();
+
+        return server.register({
+            register: require('../'),
+            options: { dir: `${Path.join(__dirname, 'routes')}/**/*.js`, glob: true }
+        }, (err) => {
+
+            expect(err).to.not.exist();
+            expect(server.table()[0].table.length).to.equal(4);
+
+            return done();
+        });
+    });
+
     it('Does not add anything when RegExp matches no files', (done) => {
 
         const server = new Hapi.Server();
